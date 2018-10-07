@@ -14,7 +14,7 @@
 			<th>Usuario</th>
 			<th>Contraseña</th>
 			<th>Email</th>
-			<th></th> <!-- Boton de eliminar -->
+			<th></th>  <!-- Boton de eliminar -->
 			<th></th> <!-- Boton de modificar -->
 		</tr>
 	</thead>

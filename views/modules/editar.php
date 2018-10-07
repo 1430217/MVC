@@ -11,8 +11,8 @@
 <form method="post">
 	<?php 
 		$editar = new MvcController();
-		$editar->buscarUsuarioController();
-		$editar->actualizarUsuarioController();
+		$editar->buscarUsuarioController(); //Se llama la funcion del controller para buscar un usuario
+		$editar->actualizarUsuarioController(); //Funcion para actualizar el usuario
 	?>
 </form>
 

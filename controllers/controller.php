@@ -3,7 +3,6 @@
 	class MvcController{
 
 		public function pagina(){
-
 			include "views/template.php";
 		}
 
@@ -15,8 +14,8 @@
 			else
 				$enlaces = "index";
 
-			$respuesta = EnlacesPaginas::enlacesPaginasModel($enlaces);
-			include $respuesta;
+			$stmt = EnlacesPaginas::enlacesPaginasModel($enlaces);
+			include $stmt;
 		}
 
 		//Controller para hacer el registro de los usuarios
@@ -29,10 +28,10 @@
 				);
 
 				//Recibe el usuario como un array y el nombre de la tabla
-				$respuesta = Datos::registrarUsuarioModel($usuario, 'usuarios'); 
+				$stmt = Datos::registrarUsuarioModel($usuario, 'usuarios'); 
 
 				//Si el registro es exitoso regresa al formulario si no al index
-				if($respuesta == "success")
+				if($stmt == "success")
 					header("location:index.php?action=ok");
 				else 
 					header("location:index.php");
@@ -47,11 +46,11 @@
 								'password' => $_POST['password']
 				);
 				//Recibe el usuario como un array y el nombre de la tabla
-				$respuesta = Datos::loginModel($usuario, 'usuarios');
+				$stmt = Datos::loginModel($usuario, 'usuarios');
 
 				//Si los datos coinciden con los de la base de datos entonces se inicia la sesion
-				if($_POST['usuario'] == $respuesta['usuario'] 
-					&&  $_POST['password'] == $respuesta['password']){ 
+				if($_POST['usuario'] == $stmt['usuario'] 
+					&&  $_POST['password'] == $stmt['password']){ 
 
 					//Se inicia la sesion y se redirecciona al listado de usuarios
 					session_start();
@@ -67,22 +66,23 @@
 		//Controller para borrar un usuario
 		public function borrarUsuarioController(){
 			if (isset($_GET['id'])) {
-				$respuesta = Datos::deleteUser($_GET['id'], 'usuarios');
 
+				$stmt = Datos::deleteUser($_GET['id'], 'usuarios');
+	
 				//Si la acion se realizó con exito se regresa al listado de usuarios
-				if($respuesta == "success")
+				if($stmt == "success")
 					header("location:index.php?action=usuarios");
 				else 
 					echo 'Error al eliminar usuario';
-			}
+			}	
 		}
 
 		//Controller para imprimir los usuarios de la base de datos en una tabla
 		public function getUsersController(){
-			$respuesta = Datos::getUsers('usuarios');
+			$stmt = Datos::getUsers('usuarios');
 
 			//For each para recorrer la tabla de los usuarios y poder imprimirlos
-			foreach ($respuesta as $usuario => $r) {
+			foreach ($stmt as $usuario => $r) {
 				//Echo para imprimir los datos en la tabla del listado de usuarios
 				echo 
 					'<tr>
@@ -106,9 +106,9 @@
 							'email' => $_POST['email']
 				);
 				//Recibe el usuario como un array y el nombre de la tabla
-				$respuesta = Datos::actualizarUsuarioModel($usuario, 'usuarios');
+				$stmt = Datos::actualizarUsuarioModel($usuario, 'usuarios');
 
-				if($respuesta == "success")
+				if($stmt == "success")
 					header("location:index.php?action=cambio");
 				else
 					echo 'Error al actualizar';
@@ -122,13 +122,13 @@
 			if (isset($_GET['id'])) {
 				$id = $_GET['id'];
 				//Recibe el id delusuario y el nombre de la tabla
-				$respuesta = Datos::buscarUsuario($id, 'usuarios');
+				$stmt = Datos::buscarUsuario($id, 'usuarios');
 
 				//Echo que imprime los datos en el formulario del usuario que se buscó en la base de datos
-				echo '<input type="hidden" name="id" value="'.$respuesta["id"].'"> 
-					<input type="text" value="'.$respuesta["usuario"].'" name="usuario" required>
-					<input type="text" value="'.$respuesta["password"].'" name="password" required>
-					<input type="email" value="'.$respuesta["email"].'" name="email" required>
+				echo '<input type="hidden" name="id" value="'.$stmt["id"].'"> 
+					<input type="text" value="'.$stmt["usuario"].'" name="usuario" required>
+					<input type="text" value="'.$stmt["password"].'" name="password" required>
+					<input type="email" value="'.$stmt["email"].'" name="email" required>
 					<input type="submit" value="Actualizar">';
 			}
 		}
