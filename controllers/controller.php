@@ -55,7 +55,7 @@
 					//Se inicia la sesion y se redirecciona al listado de usuarios
 					session_start();
 					$_SESSION['sesion'] = true;
-					header('location:index.php?action=usuarios');
+					header('location:index.php?action=usuarios&usuario='.$stmt["usuario"].'');
 				} 
 				else 
 					header('location:index.php?action=fallo');
@@ -63,23 +63,14 @@
 
 		}
 
-		//Controller para borrar un usuario
-		public function borrarUsuarioController(){
-			if (isset($_GET['id'])) {
-
-				$stmt = Datos::deleteUser($_GET['id'], 'usuarios');
-	
-				//Si la acion se realizó con exito se regresa al listado de usuarios
-				if($stmt == "success")
-					header("location:index.php?action=usuarios");
-				else 
-					echo 'Error al eliminar usuario';
-			}	
-		}
+		
 
 		//Controller para imprimir los usuarios de la base de datos en una tabla
 		public function getUsersController(){
 			$stmt = Datos::getUsers('usuarios');
+
+			if (isset($_GET["usuario"]))				
+				$usuario = $_GET["usuario"];
 
 			//For each para recorrer la tabla de los usuarios y poder imprimirlos
 			foreach ($stmt as $usuario => $r) {
@@ -89,8 +80,8 @@
 						<td>'.$r["usuario"].'</td>
 						<td>'.$r["password"].'</td>
 						<td>'.$r["email"].'</td>
-						<td><a href="index.php?action=editar&id='.$r["id"].'"><button>Editar</button></a></td>
-						<td><a href="index.php?action=usuarios&id='.$r["id"].'"><button>Borrar</button></a></td>
+						<td><a href="index.php?action=editar&usuario='.$_GET["usuario"].'&id='.$r["id"].'"><button>Editar</button></a></td>
+						<td><a href="index.php?action=confirmar&usuario='.$_GET["usuario"].'&idBorrar='.$r["id"].'"><button>Borrar</button></a></td>
 					</tr>'
 				;
 			}		
@@ -98,7 +89,6 @@
 
 		//Controller para actualizar los datos del usuario
 		public function actualizarUsuarioController(){
-
 			if (isset($_POST['id'])) {
 				$usuario = array('id' => $_POST['id'],
 							'usuario' => $_POST['usuario'],
@@ -116,6 +106,20 @@
 			}
 		}
 
+		//Controller para borrar un usuario
+		public function borrarUsuario(){
+			if (isset($_GET['idBorrar']) && isset($_GET['usuario'])) {
+				$usuario= $_GET['usuario'];
+	
+				$stmt = Datos::deleteUser($_GET['idBorrar'], 'usuarios');
+				if($stmt == "success"){
+					header('location:index.php?usuario='.$_GET['usuario'].'&action=usuarios');
+				} else {
+					echo 'Error al eliminar usuario';
+				}
+			}
+		}
+
 		//Controller para buscar a un usuario
 		public function buscarUsuarioController(){
 
@@ -130,6 +134,20 @@
 					<input type="text" value="'.$stmt["password"].'" name="password" required>
 					<input type="email" value="'.$stmt["email"].'" name="email" required>
 					<input type="submit" value="Actualizar">';
+			}
+		}
+
+		public function getPasswordController(){
+			if (isset($_POST['password']) && isset($_GET['usuario'])) {
+				$password = $_POST['password'];
+				$usuario = $_GET['usuario'];
+	
+				$r = Datos::getPassword($usuario, 'usuarios');
+				if ($r['password'] == $_POST['password']) {	
+					MvcController::borrarUsuario();
+				}else{
+					echo 'Contraseña Incorrecta';
+				}
 			}
 		}
 	

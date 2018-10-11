@@ -1,6 +1,6 @@
 <h1>Registro de usuarios</h1>
 
-<form method="post" action="">
+<form method="POST" action="">
 	<input type="text" placeholder="Usuario" name="usuario" required>
 	<input type="password" placeholder="Contraseña" name="password" required>
 	<input type="email" placeholder="Email" name="email" required>

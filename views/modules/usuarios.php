@@ -3,6 +3,10 @@
 	if (!$_SESSION['sesion']) {
 		header('location:index.php?action=ingresar');
 		exit();
+
+		if (isset($_GET['usuario']))
+			$usuario= $_GET['usuario'];
+	
 	}
 ?>
 
@@ -22,7 +26,7 @@
 		<?php 
 			$listaUsuarios = new MvcController();
 			$listaUsuarios->getUsersController();
-			$listaUsuarios->borrarUsuarioController();
+			//$listaUsuarios->borrarUsuarioController();
 		?>
 	</tbody>
 </table>
